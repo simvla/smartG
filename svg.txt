@@ -1,0 +1,13 @@
+<svg width="350" height="400" xmlns="http://www.w3.org/2000/svg">
+<rect id="Rec" x="118" y="167" height="70" width="70" stroke="black" fill="white" />
+<line x1="155" x2="155" y1="167" y2="100" stroke="brown" stroke-width="2" />
+<line x1="156" x2="185" y1="139" y2="120" stroke="green" stroke-width="3" />
+<line x1="156" x2="120" y1="118" y2="100" stroke="green" stroke-width="3" />
+<line x1="119" x2="189" y1="183" y2="183" stroke="black" />
+<text x="124" y="250" fill="blue">T1:</text>
+<text x="192" y="190" fill="blue">T2:_______C</text>
+<text x="124" y="60" fill="blue">T3:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspC</text>
+<text x="124" y="80" fill="blue">H1:</text>
+<text visibility="hiden">CFG</text>
+</svg> 
+
