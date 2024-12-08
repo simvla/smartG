@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>cguiapp</title>
+	
+	<style>
+    .dropbtn {
+	  background-color: #4CAF50;
+	  color: white;
+	  padding: 10px 5px 5px 10px;
+	  font-size: 16px;
+	  border: none;
+	  cursor: pointer;
+	}
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+	  height:140px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      overflow-y: scroll;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {background-color: #f1f1f1}
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+      background-color: #3e8e41;
+    }
+
+    </style>
+	
+  </head>
+  <body>
+    <div id="view" style="border:1px solid black;width:350px;height:400px;" > </div>
+	<textarea id="ptext" style="position:absolute;top:530px;left:10px" name="ptext" cols="60" rows="20"></textarea>
+	<button id="add" onclick="add()" style="position:absolute;top:500px;left:307px">add</button>
+	<div class="dropdown">
+      <button class="dropbtn"><!--<img style="display:none" id="btnimg" src="rect.svg">--><p id="btntxt" style="padding:5px">Draw</p></button> 
+      <div class="dropdown-content">
+	    <!--<img src="rect.svg" style="float:left">-->
+        <a onclick="formatDrop('R')" href="#">Rectangle</a>
+        <a onclick="formatDrop('T')" href="#">Triangle</a>
+        <a onclick="formatDrop('C')" href="#">Circle</a>
+		<a onclick="formatDrop('L')" href="#">Line</a>
+		<a onclick="formatDrop('t')" href="#">Text</a>
+      </div>
+    </div>
+    <input style="width:110px;" type="text" id="par1" value=""/>
+	<!--<input style="width:110px" type="text" id="par2" value=""/>
+	<input style="width:110px" type="text" id="par3" value=""/>-->
+	<!--<button onclick="add();" style="">add</button>-->
+	
+	<p id="debug">d: </p>
+
+
+  </body>
+  <script>
+    // Elements 
+	//---------Rect---------------
+	var rect="<rect id=\"Rec\" x=\"" 
+	var rect_pos="\" y=\"";
+	var rect_sizew= "\" width=\"";
+	var rect_sizeh= "\" height=\"";
+	var rect_end= "\" stroke=\"black\" fill=\"white\" />\n"
+	//---------Line---------------
+	var line="<line x1=\""
+	var line_len="\" x2=\""
+	var line_pos="\" y1=\""
+	var line_dir="\" y2=\""
+	var line_end="\" stroke=\"black\" stroke-width=\"1\" />\n"
+	//---------Circle-------------
+	//---------Triangle-----------
+	//---------Text---------------
+	
+	// SVG header 
+	var svg="<svg width=\"350\" height=\"400\" id=\"svg\" xmlns=\"http://www.w3.org/2000/svg\">\n";
+	var svg_end="</svg>"; 
+	
+	var elemstr=""; //append all svg elements 
+	var finalstr=""; // final svg text(header+elem)
+	
+	// current element code
+	var e="";
+	// calibration value(cursor)
+	const offset=8;
+	
+	//parameter inputs
+	parameter1=document.getElementById("par1"); //coordinates
+	//parameter2=document.getElementById("par2");
+	//parameter3=document.getElementById("par3"); 
+	
+	//set dropdown look and input parameters to selected element
+	function formatDrop(element){
+      //document.getElementById("log").innerHTML=element; // check argument pass
+	  if(element=='R'){
+	    //document.getElementById("btnimg").style.display = "block";
+	    //document.getElementById("btntxt").style.display = "none";
+		document.getElementById("btntxt").innerHTML="R";
+        
+		/*parameter2.value="";
+		parameter2.placeholder="width height"
+		parameter2.disabled=false;
+		parameter3.value="";
+		parameter3.placeholder="borderColor"
+	    parameter3.disabled=false;*/
+		
+		e='R';
+	  }
+	  if(element=='T'){
+	    
+		document.getElementById("btntxt").innerHTML="T";
+		
+		e='T';
+	  }
+	  if(element=='t'){
+	    
+		document.getElementById("btntxt").innerHTML="txt";
+		
+		e='t';
+	  }
+	  if(element=='L'){
+	    
+		document.getElementById("btntxt").innerHTML="L";
+		
+		e='L';
+	  }
+	  if(element=='C'){
+	    
+		document.getElementById("btntxt").innerHTML="C";
+		
+		e='C';
+	  }
+	}
+	
+	document.onmousemove=showCoord; //init mouse_move event callback func
+	document.getElementById("view").onclick=draw; //init mouse_click event callback func on 'view' div area 
+	
+	function draw(event){
+	  if(e=="R"){
+	    elemstr+=rect+(event.clientX-offset)+rect_pos+(event.clientY-offset)+rect_sizeh+'70'+rect_sizew+'70'+rect_end;
+	  }
+	  if(e=="C"){
+	    elemstr+="<circle cx=\""+(event.clientX-offset)+"\" cy=\""+(event.clientY-offset)+"\" r=\"15\" stroke=\"black\" fill=\"white\" />\n"  
+	  }
+	  if(e=="T"){
+	    elemstr+="<polygon points=\""+(event.clientX-offset)+","+(event.clientY-offset)+" "+((event.clientX-offset)-20)+","+((event.clientY-offset)+40)+" "+((event.clientX-offset)+20)+","+((event.clientY-offset)+40)+"\" fill=\"white\" stroke=\"black\" />\n"
+	  }
+	  if(e=="L"){
+	    elemstr+=line+(event.clientX-offset)+line_len+((event.clientX-offset)+70)+line_pos+(event.clientY-offset)+line_dir+(event.clientY-offset)+line_end;
+	  }
+	  if(e=="t"){
+	    elemstr+="<text x=\""+(event.clientX-offset)+"\"y=\""+(event.clientY-offset)+"\" fill=\"black\">enter t, press add</text>\n"
+	  }
+	  finalstr=svg+elemstr+svg_end;
+	  document.getElementById("view").innerHTML=finalstr;
+	  document.getElementById("ptext").value=finalstr; //fill textarea with svg code
+	  
+	  //!!!
+	  //var rec=document.querySelector("#Rec"); 
+	  //document.getElementById("debug").innerHTML=rec.getAttribute("x")*1;
+	}
+	
+	function showCoord(event){
+	  parameter1.value=(event.clientX-offset).toString()+" "+(event.clientY-offset).toString(); // position
+	}
+	
+	function add(){
+	  finalstr=document.getElementById("ptext").value;
+	  document.getElementById("view").innerHTML=finalstr;
+	  
+	  var flen=finalstr.length;
+	  elemstr=finalstr.substring(svg.length,flen-svg_end.length); //extract and init elements text content
+	 
+	}
+	
+	// Parse svg text for Led On Off
+	//var len=svg.length;
+    //svg.slice(74);
+	//substring(fromi,toi);
+	//var text = "<circle id=\"1\" cx=\"220\" cy=\"40\" r=\"15\" stroke=\"black\" fill=\"white\" /><circle id=\"2\" cx=\"220\" cy=\"40\" r=\"15\" stroke=\"black\" fill=\"white\" />"; 
+    //var idstart=text.indexOf("id=\"2\""); //77
+    //var idend=text.indexOf(">", 77); //137
+    //var newtxt=text.slice(idstart-8,idend+1);
+	//document.getElementById("log").append(newtxt);
+	
+	
+	// Standard <select id="sel"><option value="">text</option></select>
+	//var e=document.getElementById("sel");
+	//var value=e.value;
+	//var obj = e.options[e.selectedIndex].value;
+	//var text = e.options[e.selectedIndex].text;
+	
+	// Get element attributes
+	/*const e=document.getElementById("par1");
+	const name = e.getAttribute("id");
+	document.getElementById("debug").innerHTML=name;*/
+	
+	// Save/download data to file 
+	/*var svgBlob=new Blob([svg],{type:'text/plain'}); //binary large object format conversion
+	var sFileName = 'cgui.svg'; //file to save data
+	var link = document.createElement("a"); 
+    link.download = sFileName;
+	link.href = window.URL.createObjectURL(svgBlob);
+	//console.log(link); //debug
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click(); */
+	
+	// Read file example
+	/*function readTextFile(file){
+	  var rawFile = new XMLHttpRequest();
+	  rawFile.open("GET", file, false);
+	  rawFile.onreadystatechange = function (){
+		if(rawFile.readyState === 4){
+		  if(rawFile.status === 200 || rawFile.status == 0){
+			var allText = rawFile.responseText;
+			alert(allText);
+          }
+        }
+      }
+    }
+    rawFile.send(null);
+	readTextFile("file:///C:/your/path/to/file.txt");*/
+	
+    /*var res800x400=["default", "x y"];
+	var res350x400=["phone", "x y"];*/
+  
+  </script>
+</html> 
