@@ -9,6 +9,7 @@ Other files(cguijs.js, index.php, svg.txt, chart.min.js) resides on client(mobil
 To draw custom user interface open cguiapp.html on pc browser: <br>
 ![cguiapp](https://github.com/user-attachments/assets/09ee23f4-1a4f-42aa-a7d6-b2f60c710afa) <br>
 Copy generated text to svg.txt file. For now I will not explain this javascript code in detail, but feel free to experiment with this. <br>
+https://github.com/simvla/smartG
 ...
 
 
